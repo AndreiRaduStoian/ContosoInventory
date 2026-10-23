@@ -62,6 +62,9 @@ ContosoInventory/
 
 When the application is running, Swagger UI is available at: `http://localhost:5240/swagger`
 
+For endpoint details, request/response examples, and authorization requirements, see
+the [API reference](docs/api-reference.md).
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -1,7 +1,7 @@
 ---
+name: generate-api-docs
 description: 'Generate API documentation for the active controller file'
-agent: 'copilot'
-tools: ['search', 'read']
+disable-model-invocation: true
 ---
  # Generate API Documentation
 
