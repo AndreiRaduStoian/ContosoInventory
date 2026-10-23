@@ -314,6 +314,7 @@ Response (`200 OK`):
   - `401 Unauthorized` — No valid authentication cookie was supplied.
   - `403 Forbidden` — The authenticated user does not have the `Admin` role.
   - `400 Bad Request` — The route identifier cannot be converted to an integer.
+  - `409 Conflict` — Products still reference this category.
   - `404 Not Found` — No category exists with that identifier.
   - `429 Too Many Requests` — The global rate limit was reached.
   - `500 Internal Server Error` — An unexpected server-side failure occurred.
@@ -362,3 +363,73 @@ Response (`200 OK`):
   "lastModifiedDate": "2026-10-23T12:30:00Z"
 }
 ```
+
+## Products
+
+Product responses use this shape:
+
+```json
+{
+  "id": 24,
+  "name": "Business Laptop",
+  "sku": "LAP-024",
+  "description": "14-inch business laptop",
+  "price": 1299.99,
+  "stockQuantity": 8,
+  "categoryId": 12,
+  "createdDate": "2026-10-23T12:00:00Z",
+  "lastUpdatedDate": "2026-10-23T12:00:00Z"
+}
+```
+
+All product endpoints require authentication. Creating, updating, deleting, and
+restocking additionally require the `Admin` role. Product SKUs are unique without
+case sensitivity. A category cannot be deleted while products reference it.
+
+### List products
+
+- **Method and route:** `GET /api/Products?categoryId={id}`
+- **Purpose:** Returns products, optionally filtered by category.
+- **Authentication:** Required; any authenticated role.
+- **Responses:** `200 OK` with a product array; `401 Unauthorized` when unauthenticated.
+
+### Get a product
+
+- **Method and route:** `GET /api/Products/{id}`
+- **Purpose:** Returns one product by integer identifier.
+- **Authentication:** Required; any authenticated role.
+- **Responses:** `200 OK`, `404 Not Found`, or `401 Unauthorized`.
+
+### Create a product
+
+- **Method and route:** `POST /api/Products`
+- **Authentication:** Required; `Admin` role.
+- **Request body:** `name` (2–200 characters), `sku` (1–64 characters),
+  `description` (up to 2,000 characters), `price` (greater than 0, at most
+  999,999,999.99, and no more than two decimal places), `stockQuantity` (nonnegative integer), and `categoryId`
+  (positive integer referencing an existing category).
+- **Responses:** `201 Created` with a Location header; `400 Bad Request` for invalid
+  data, a missing category, or a duplicate SKU; `401 Unauthorized`; `403 Forbidden`.
+
+### Update a product
+
+- **Method and route:** `PUT /api/Products/{id}`
+- **Authentication:** Required; `Admin` role.
+- **Request body:** `name`, `sku`, `description`, `price`, and `categoryId` with the
+  same constraints as creation. Stock is changed through restocking, not this route.
+- **Responses:** `200 OK`; `400 Bad Request` for invalid data, a missing category,
+  or a duplicate SKU; `404 Not Found`; `401 Unauthorized`; `403 Forbidden`.
+
+### Delete a product
+
+- **Method and route:** `DELETE /api/Products/{id}`
+- **Authentication:** Required; `Admin` role.
+- **Responses:** `204 No Content`; `404 Not Found`; `401 Unauthorized`; `403 Forbidden`.
+
+### Restock a product
+
+- **Method and route:** `POST /api/Products/{id}/restock`
+- **Authentication:** Required; `Admin` role.
+- **Request body:** `quantity` (positive integer to add to current stock).
+- **Responses:** `200 OK` with the updated product; `400 Bad Request` for invalid
+  quantity or integer overflow; `404 Not Found`; `401 Unauthorized`; `403 Forbidden`.
