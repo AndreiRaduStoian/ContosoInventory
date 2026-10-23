@@ -1,8 +1,8 @@
- ---
- name: 'Service Layer Standards'
- description: 'Coding standards for business logic service classes'
- applyTo: '**/Services/**/*.cs'
- ---
+---
+name: 'Service Layer Standards'
+description: 'Coding standards for business logic service classes'
+applyTo: '**/Services/**/*.cs'
+---
  # Service Layer Standards
 
  - Define a corresponding interface for every service class (e.g., IProductService for ProductService).

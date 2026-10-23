@@ -1,8 +1,8 @@
- ---
- name: 'API Controller Standards'
- description: 'Coding standards for ASP.NET Core API controllers'
- applyTo: '**/Controllers/**/*.cs'
- ---
+---
+name: 'API Controller Standards'
+description: 'Coding standards for ASP.NET Core API controllers'
+applyTo: '**/Controllers/**/*.cs'
+---
  # API Controller Standards
 
  - Inherit from ControllerBase and apply the [ApiController] attribute.
